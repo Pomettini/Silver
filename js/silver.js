@@ -34,6 +34,13 @@ const BRUSH_TYPES = {
   }
 };
 
+const DOOR_TYPES = {
+  NONE: 0,
+  NO_DOOR: 1,
+  NORMAL_DOOR: 2,
+  LOCKED_DOOR: 3,
+};
+
 // --- Variables ---
 
 // var Brush = {
@@ -46,7 +53,11 @@ var CurrentBrush = {
   type: BRUSH_TYPES.None
 };
 var IsMouseDown = false;
-var MapData = [];
+var MapData = {
+  tiles: [],
+  // North, East, South, West
+  doors: [DOOR_TYPES.NONE, DOOR_TYPES.NONE, DOOR_TYPES.NONE, DOOR_TYPES.NONE]
+};
 
 // --- Functions ---
 
@@ -59,6 +70,8 @@ $(function () {
     type: BRUSH_TYPES.None
   });
 
+  SpawnDoors();
+
   $("#grid").width(W_CELLS * CELL_SIZE);
   $("#grid").height(H_CELLS * CELL_SIZE);
 
@@ -67,7 +80,7 @@ $(function () {
   $(".cell").css("width", CELL_SIZE + "px");
   $(".cell").css("height", CELL_SIZE + "px");
 
-  MapData = Array(W_CELLS * H_CELLS).fill(0);
+  MapData.tiles = Array(W_CELLS * H_CELLS).fill(0);
 });
 
 function AddBrushes() {
@@ -105,6 +118,26 @@ function SpawnCells() {
       $("#grid").append(cell);
     }
   }
+}
+
+function SpawnDoors() {
+  SpawnDoor(CELL_SIZE * (W_CELLS / 2) - (CELL_SIZE / 2), -50);
+  SpawnDoor(CELL_SIZE * W_CELLS, CELL_SIZE * (H_CELLS / 2) - (CELL_SIZE / 2));
+  SpawnDoor(CELL_SIZE * (W_CELLS / 2) - (CELL_SIZE / 2), CELL_SIZE * H_CELLS);
+  SpawnDoor(-50, (H_CELLS / 2) * CELL_SIZE - (CELL_SIZE / 2));
+}
+
+function SpawnDoor(x, y) {
+  var cell = $("<div>", {
+    "class": "cell door",
+    "onMouseDown": `OnCellClicked(this)`,
+    "onMouseEnter": `OnCellClickWhileDragging(this)`,
+    css: {
+      left: x,
+      top: y
+    }
+  });
+  $("#grid").append(cell);
 }
 
 function SetBrush(brush) {
@@ -145,7 +178,7 @@ function ImportMap(file) {
 }
 
 function ExportMap() {
-  let csv = MapData.join(",");
+  let csv = MapData.tiles.join(",");
   let today = new Date();
   let suffix = today.getHours() + "_" + today.getMinutes() + "_" + today.getSeconds();
   DownloadFile(`mylevel_${suffix}.csv`, csv);
@@ -183,7 +216,7 @@ function OnCellClickWhileDragging(obj, id) {
 }
 
 function OnCellClicked(obj, id) {
-  MapData[id] = CurrentBrush.type.id;
+  MapData.tiles[id] = CurrentBrush.type.id;
   $(obj).css("background-color", CurrentBrush.type.color);
 }
 
