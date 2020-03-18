@@ -52,5 +52,13 @@ body {
 #brushes li.selected {
     font-weight: bold;
     font-size: 150%;
-    width: 125px;
+    width: 110px;
+    z-index: 2;
+    padding: 20px;
+}
+
+input, button {
+    display: block;
+    clear: both;
+    margin: 10px;
 }

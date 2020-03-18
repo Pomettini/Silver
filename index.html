@@ -6,14 +6,16 @@
     <title>Silver – Stupidly Simple Level Editor for Roguelikes</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/silver.js"></script>
+    <script src="js/papaparse.min.js"></script>
 </head>
 
 <body>
     <div id="grid"></div>
     <ul id="brushes"></ul>
+    <input type="file" accept=".csv" onchange="ImportMap(this)">
+    <button type="button" onclick="ExportMap()">Save Level</button>
 </body>
 
 </html>

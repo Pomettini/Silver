@@ -24,6 +24,13 @@ const BRUSH_TYPES = {
     id: 3,
     color: "yellow",
     textcolor: "black"
+  },
+  _key: function (n) {
+    let myKey = {
+      name: Object.keys(BRUSH_TYPES)[n],
+      type: this[Object.keys(this)[n]]
+    }
+    return myKey;
   }
 }
 
@@ -34,11 +41,12 @@ const BRUSH_TYPES = {
 //   type
 // }
 
-var IsMouseDown = false;
 var CurrentBrush = {
   name: "None",
   type: BRUSH_TYPES["None"]
 };
+var IsMouseDown = false;
+var MapData = [];
 
 // --- Functions ---
 
@@ -58,10 +66,15 @@ $(function () {
 
   $(".cell").css("width", CELL_SIZE + "px");
   $(".cell").css("height", CELL_SIZE + "px");
+
+  MapData = Array(W_CELLS * H_CELLS).fill(0);
 });
 
 function AddBrushes() {
   for (var key in BRUSH_TYPES) {
+    if (key === "_key")
+      continue;
+
     var brush = $("<li>", {
       "text": key,
       "id": key.toLowerCase() + "_brush",
@@ -79,10 +92,11 @@ function AddBrushes() {
 function SpawnCells() {
   for (x = 0; x < W_CELLS; x++) {
     for (y = 0; y < H_CELLS; y++) {
+      let id = (y * W_CELLS) + x;
       var cell = $("<div>", {
         "class": "cell",
-        "onMouseDown": `OnCellClicked(this, ${x}, ${y})`,
-        "onMouseEnter": `OnCellClickWhileDragging(this, ${x}, ${y})`,
+        "onMouseDown": `OnCellClicked(this, ${id})`,
+        "onMouseEnter": `OnCellClickWhileDragging(this, ${id})`,
         css: {
           left: (CELL_SIZE * x) + "px",
           top: (CELL_SIZE * y) + "px"
@@ -94,14 +108,63 @@ function SpawnCells() {
 }
 
 function SetBrush(brush) {
-  // GetBrushElement(CurrentBrush.name).removeClass("selected");
+  GetBrushElement(CurrentBrush.name).removeClass("selected");
   CurrentBrush = brush;
-  // GetBrushElement(brushName).addClass("selected");
+  GetBrushElement(CurrentBrush.name).addClass("selected");
 }
 
 function GetBrushElement(name) {
   return $("#" + name.toLowerCase() + "_brush");
 }
+
+function SetBrushById(id) {
+  // TODO: Refactor this crap
+  if (BRUSH_TYPES._key(id).name != null && BRUSH_TYPES._key(id).name !== "_key") {
+    SetBrush(BRUSH_TYPES._key(id));
+  }
+}
+
+function ReadTextFile(obj) {
+  if (obj.files.length === 0) {
+    console.log('No file selected.');
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function fileReadCompleted() {
+    // when the reader is done, the content is in reader.result.
+    console.log(reader.result);
+  };
+
+  reader.readAsText(obj.files[0]);
+}
+
+function ImportMap(file) {
+  ReadTextFile(file);
+}
+
+function ExportMap() {
+  let csv = MapData.join(",");
+  let today = new Date();
+  let suffix = today.getHours() + "_" + today.getMinutes() + "_" + today.getSeconds();
+  DownloadFile(`mylevel_${suffix}.csv`, csv);
+}
+
+function DownloadFile(filename, text) {
+  // Thanks to https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
 
 // --- Events ---
 
@@ -113,14 +176,14 @@ function OnBrushClicked(obj) {
   });
 }
 
-function OnCellClickWhileDragging(obj, x, y) {
+function OnCellClickWhileDragging(obj, id) {
   if (IsMouseDown === true) {
-    OnCellClicked(obj, x, y)
+    OnCellClicked(obj, id)
   }
 }
 
-function OnCellClicked(obj, x, y) {
-  // console.log(CurrentBrush);
+function OnCellClicked(obj, id) {
+  MapData[id] = CurrentBrush.type.id;
   $(obj).css("background-color", CurrentBrush.type.color);
 }
 
@@ -130,4 +193,11 @@ $(window).mousedown(function () {
 
 $(window).mouseup(function () {
   IsMouseDown = false;
+});
+
+$(document).keypress(function (e) {
+  let key = e.which - 49;
+  if (key >= 0 && key <= 9) {
+    SetBrushById(key);
+  }
 });
