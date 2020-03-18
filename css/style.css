@@ -29,7 +29,6 @@ body {
 }
 
 #brushes {
-    background-color: black;
     position: absolute;
     left: 0;
     top: 50%;
@@ -41,6 +40,7 @@ body {
     outline: 1px solid black;
     padding: 15px;
     margin: 1px 0;
+    width: 100px;
 }
 
 #brushes li:hover {
@@ -50,6 +50,7 @@ body {
 }
 
 #brushes li.selected {
-    background-color: gainsboro;
     font-weight: bold;
+    font-size: 150%;
+    width: 125px;
 }

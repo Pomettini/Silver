@@ -29,8 +29,16 @@ const BRUSH_TYPES = {
 
 // --- Variables ---
 
+// var Brush = {
+//   name,
+//   type
+// }
+
 var IsMouseDown = false;
-var CurrentBrushType = BRUSH_TYPES["None"];
+var CurrentBrush = {
+  name: "None",
+  type: BRUSH_TYPES["None"]
+};
 
 // --- Functions ---
 
@@ -38,7 +46,10 @@ $(function () {
   console.log("Ready!");
 
   AddBrushes();
-  SetBrush(BRUSH_TYPES["None"]);
+  SetBrush({
+    name: "None",
+    type: BRUSH_TYPES["None"]
+  });
 
   $("#grid").width(W_CELLS * CELL_SIZE);
   $("#grid").height(H_CELLS * CELL_SIZE);
@@ -53,7 +64,8 @@ function AddBrushes() {
   for (var key in BRUSH_TYPES) {
     var brush = $("<li>", {
       "text": key,
-      "class": ["brush", key.toLowerCase()],
+      "id": key.toLowerCase() + "_brush",
+      "class": "brush",
       "onMouseDown": "OnBrushClicked(this)",
       css: {
         color: BRUSH_TYPES[key].textcolor,
@@ -81,12 +93,24 @@ function SpawnCells() {
   }
 }
 
+function SetBrush(brush) {
+  // GetBrushElement(CurrentBrush.name).removeClass("selected");
+  CurrentBrush = brush;
+  // GetBrushElement(brushName).addClass("selected");
+}
+
+function GetBrushElement(name) {
+  return $("#" + name.toLowerCase() + "_brush");
+}
+
 // --- Events ---
 
 function OnBrushClicked(obj) {
-  var brushType = BRUSH_TYPES[$(obj).text()];
-  // console.log(brushType);
-  SetBrush(brushType);
+  let brushName = $(obj).text();
+  SetBrush({
+    name: brushName,
+    type: BRUSH_TYPES[brushName]
+  });
 }
 
 function OnCellClickWhileDragging(obj, x, y) {
@@ -96,12 +120,8 @@ function OnCellClickWhileDragging(obj, x, y) {
 }
 
 function OnCellClicked(obj, x, y) {
-  $(obj).css("background-color", CurrentBrushType.color);
-}
-
-function SetBrush(brushType) {
-  console.log(brushType);
-  CurrentBrushType = brushType;
+  // console.log(CurrentBrush);
+  $(obj).css("background-color", CurrentBrush.type.color);
 }
 
 $(window).mousedown(function () {
