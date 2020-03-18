@@ -1,8 +1,11 @@
 * {
     transition: 0.05s;
+    user-select: none;
 }
 
-body {}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
 
 #grid {
     background-color: black;
@@ -23,4 +26,30 @@ body {}
     transform: scale(1.2);
     z-index: 1;
     box-shadow: 0px 2px 5px grey;
+}
+
+#brushes {
+    background-color: black;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#brushes li {
+    background-color: white;
+    outline: 1px solid black;
+    padding: 15px;
+    margin: 1px 0;
+}
+
+#brushes li:hover {
+    transform: scale(1.2);
+    z-index: 1;
+    box-shadow: 0px 2px 5px grey;
+}
+
+#brushes li.selected {
+    background-color: gainsboro;
+    font-weight: bold;
 }
