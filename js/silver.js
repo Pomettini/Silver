@@ -29,10 +29,10 @@ const BRUSH_TYPES = {
     let myKey = {
       name: Object.keys(BRUSH_TYPES)[n],
       type: this[Object.keys(this)[n]]
-    }
+    };
     return myKey;
   }
-}
+};
 
 // --- Variables ---
 
@@ -43,7 +43,7 @@ const BRUSH_TYPES = {
 
 var CurrentBrush = {
   name: "None",
-  type: BRUSH_TYPES["None"]
+  type: BRUSH_TYPES.None
 };
 var IsMouseDown = false;
 var MapData = [];
@@ -56,7 +56,7 @@ $(function () {
   AddBrushes();
   SetBrush({
     name: "None",
-    type: BRUSH_TYPES["None"]
+    type: BRUSH_TYPES.None
   });
 
   $("#grid").width(W_CELLS * CELL_SIZE);
@@ -178,7 +178,7 @@ function OnBrushClicked(obj) {
 
 function OnCellClickWhileDragging(obj, id) {
   if (IsMouseDown === true) {
-    OnCellClicked(obj, id)
+    OnCellClicked(obj, id);
   }
 }
 
