@@ -1,0 +1,26 @@
+* {
+    transition: 0.05s;
+}
+
+body {}
+
+#grid {
+    background-color: black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.cell {
+    background-color: white;
+    outline: 1px solid black;
+    position: absolute;
+    z-index: 0;
+}
+
+.cell:hover {
+    transform: scale(1.2);
+    z-index: 1;
+    box-shadow: 0px 2px 5px grey;
+}
