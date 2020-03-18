@@ -35,10 +35,22 @@ const BRUSH_TYPES = {
 };
 
 const DOOR_TYPES = {
-  NONE: 0,
-  NO_DOOR: 1,
-  NORMAL_DOOR: 2,
-  LOCKED_DOOR: 3,
+  NONE: {
+    id: 0,
+    image: "doors/None.png"
+  },
+  WALL: {
+    id: 1,
+    image: "doors/Wall.png"
+  },
+  NORMAL_DOOR: {
+    id: 2,
+    image: "doors/NormalDoor.png"
+  },
+  LOCKED_DOOR: {
+    id: 3,
+    image: "doors/LockedDoor.png"
+  },
 };
 
 // --- Variables ---
@@ -121,17 +133,16 @@ function SpawnCells() {
 }
 
 function SpawnDoors() {
-  SpawnDoor(CELL_SIZE * (W_CELLS / 2) - (CELL_SIZE / 2), -50);
-  SpawnDoor(CELL_SIZE * W_CELLS, CELL_SIZE * (H_CELLS / 2) - (CELL_SIZE / 2));
-  SpawnDoor(CELL_SIZE * (W_CELLS / 2) - (CELL_SIZE / 2), CELL_SIZE * H_CELLS);
-  SpawnDoor(-50, (H_CELLS / 2) * CELL_SIZE - (CELL_SIZE / 2));
+  SpawnDoor(0, CELL_SIZE * (W_CELLS / 2) - (CELL_SIZE / 2), -50);
+  SpawnDoor(1, CELL_SIZE * W_CELLS, CELL_SIZE * (H_CELLS / 2) - (CELL_SIZE / 2));
+  SpawnDoor(2, CELL_SIZE * (W_CELLS / 2) - (CELL_SIZE / 2), CELL_SIZE * H_CELLS);
+  SpawnDoor(3, -50, (H_CELLS / 2) * CELL_SIZE - (CELL_SIZE / 2));
 }
 
-function SpawnDoor(x, y) {
+function SpawnDoor(id, x, y) {
   var cell = $("<div>", {
     "class": "cell door",
-    "onMouseDown": `OnCellClicked(this)`,
-    "onMouseEnter": `OnCellClickWhileDragging(this)`,
+    "onMouseDown": `OnDoorClicked(this, ${id})`,
     css: {
       left: x,
       top: y
@@ -178,10 +189,16 @@ function ImportMap(file) {
 }
 
 function ExportMap() {
+  // TODO: Find a way to refactor that crap
   let csv = MapData.tiles.join(",");
   let today = new Date();
-  let suffix = today.getHours() + "_" + today.getMinutes() + "_" + today.getSeconds();
-  DownloadFile(`mylevel_${suffix}.csv`, csv);
+  let day = today.getDay().toString().padStart(2, "0");
+  let month = today.getMonth().toString().padStart(2, "0");
+  let hours = today.getHours().toString().padStart(2, "0");
+  let minutes = today.getMinutes().toString().padStart(2, "0");
+  let seconds = today.getSeconds().toString().padStart(2, "0");
+  let suffix = `${day}_${month}__${hours}_${minutes}_${seconds}`;
+  DownloadFile(`mylevel__${suffix}.csv`, csv);
 }
 
 function DownloadFile(filename, text) {
@@ -197,7 +214,6 @@ function DownloadFile(filename, text) {
 
   document.body.removeChild(element);
 }
-
 
 // --- Events ---
 
@@ -218,6 +234,10 @@ function OnCellClickWhileDragging(obj, id) {
 function OnCellClicked(obj, id) {
   MapData.tiles[id] = CurrentBrush.type.id;
   $(obj).css("background-color", CurrentBrush.type.color);
+}
+
+function OnDoorClicked(obj) {
+
 }
 
 $(window).mousedown(function () {
