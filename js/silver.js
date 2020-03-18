@@ -38,6 +38,7 @@ $(function () {
   console.log("Ready!");
 
   AddBrushes();
+  SetBrush(BRUSH_TYPES["None"]);
 
   $("#grid").width(W_CELLS * CELL_SIZE);
   $("#grid").height(H_CELLS * CELL_SIZE);
@@ -52,8 +53,8 @@ function AddBrushes() {
   for (var key in BRUSH_TYPES) {
     var brush = $("<li>", {
       "text": key,
-      "class": "brush",
-      "onClick": "OnBrushClicked(this)",
+      "class": ["brush", key.toLowerCase()],
+      "onMouseDown": "OnBrushClicked(this)",
       css: {
         color: BRUSH_TYPES[key].textcolor,
         backgroundColor: BRUSH_TYPES[key].color
@@ -63,27 +64,13 @@ function AddBrushes() {
   }
 }
 
-function OnBrushClicked(obj) {
-  // var brushType = BrushTypes[$(brush).text()];
-  // console.log(brushType);
-  SetBrush(obj);
-}
-
-$(window).mousedown(function () {
-  IsMouseDown = true;
-});
-
-$(window).mouseup(function () {
-  IsMouseDown = false;
-});
-
-
 function SpawnCells() {
   for (x = 0; x < W_CELLS; x++) {
     for (y = 0; y < H_CELLS; y++) {
       var cell = $("<div>", {
         "class": "cell",
-        "onMouseEnter": `OnCellClicked(this, ${x}, ${y})`,
+        "onMouseDown": `OnCellClicked(this, ${x}, ${y})`,
+        "onMouseEnter": `OnCellClickWhileDragging(this, ${x}, ${y})`,
         css: {
           left: (CELL_SIZE * x) + "px",
           top: (CELL_SIZE * y) + "px"
@@ -94,14 +81,33 @@ function SpawnCells() {
   }
 }
 
-function OnCellClicked(obj, x, y) {
-  // console.log(cell);
-  // console.log(x + " " + y);
+// --- Events ---
+
+function OnBrushClicked(obj) {
+  var brushType = BRUSH_TYPES[$(obj).text()];
+  // console.log(brushType);
+  SetBrush(brushType);
+}
+
+function OnCellClickWhileDragging(obj, x, y) {
   if (IsMouseDown === true) {
-    $(obj).css("background-color", "red");
+    OnCellClicked(obj, x, y)
   }
+}
+
+function OnCellClicked(obj, x, y) {
+  $(obj).css("background-color", CurrentBrushType.color);
 }
 
 function SetBrush(brushType) {
   console.log(brushType);
+  CurrentBrushType = brushType;
 }
+
+$(window).mousedown(function () {
+  IsMouseDown = true;
+});
+
+$(window).mouseup(function () {
+  IsMouseDown = false;
+});
