@@ -188,16 +188,17 @@ function ImportMap(file) {
   ReadTextFile(file);
 }
 
+// Add leading zero if number is one character
+Number.prototype.Lead = function () {
+  return this.toString().padStart(2, "0");
+};
+
 function ExportMap() {
-  // TODO: Find a way to refactor that crap
   let csv = MapData.tiles.join(",");
-  let today = new Date();
-  let day = today.getDay().toString().padStart(2, "0");
-  let month = today.getMonth().toString().padStart(2, "0");
-  let hours = today.getHours().toString().padStart(2, "0");
-  let minutes = today.getMinutes().toString().padStart(2, "0");
-  let seconds = today.getSeconds().toString().padStart(2, "0");
-  let suffix = `${day}_${month}__${hours}_${minutes}_${seconds}`;
+  let d = new Date();
+  let date = `${d.getDay().Lead()}_${d.getMonth().Lead()}`;
+  let time = `${d.getHours().Lead()}_${d.getMinutes().Lead()}_${d.getDay().Lead()}`;
+  let suffix = `${date}__${time}`;
   DownloadFile(`mylevel__${suffix}.csv`, csv);
 }
 
