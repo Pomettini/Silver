@@ -24,13 +24,6 @@ const BRUSH_TYPES = {
     id: 3,
     color: "yellow",
     textcolor: "black"
-  },
-  _key: function (n) {
-    let myKey = {
-      name: Object.keys(BRUSH_TYPES)[n],
-      type: this[Object.keys(this)[n]]
-    };
-    return myKey;
   }
 };
 
@@ -100,9 +93,6 @@ $(function () {
 
 function AddBrushes() {
   for (var key in BRUSH_TYPES) {
-    if (key === "_key")
-      continue;
-
     var brush = $("<li>", {
       "text": key,
       "id": key.toLowerCase() + "_brush",
@@ -166,8 +156,8 @@ function GetBrushElement(name) {
 
 function SetBrushById(id) {
   // TODO: Refactor this crap
-  if (BRUSH_TYPES._key(id).name != null && BRUSH_TYPES._key(id).name !== "_key") {
-    SetBrush(BRUSH_TYPES._key(id));
+  if (GetBrushById(id).name != null) {
+    SetBrush(GetBrushById(id));
   }
 }
 
@@ -189,15 +179,6 @@ function ReadTextFile(obj) {
 
 function ImportMap(file) {
   ReadTextFile(file);
-}
-
-// Add leading zero if number is one character
-Number.prototype.Lead = function () {
-  return this.toString().padStart(2, "0");
-};
-
-String.prototype.AddComma = function () {
-  return this + ",";
 }
 
 function ExportMap() {
@@ -257,7 +238,18 @@ function OnDoorClicked(obj, id) {
   } else {
     MapData.doors[id] = 0;
   }
-  $(obj).css("background-image", `url(img/${DOOR_TYPES[Object.keys(DOOR_TYPES)[MapData.doors[id]]].image})`);
+  $(obj).css("background-image", `url(img/${GetDoorImageById(id)})`);
+}
+
+function GetDoorImageById(id) {
+  return DOOR_TYPES[Object.keys(DOOR_TYPES)[MapData.doors[id]]].image;
+}
+
+function GetBrushById(id) {
+  return {
+    name: Object.keys(BRUSH_TYPES)[id],
+    type: BRUSH_TYPES[Object.keys(BRUSH_TYPES)[id]]
+  };
 }
 
 $(window).mousedown(function () {
@@ -274,3 +266,14 @@ $(document).keypress(function (e) {
     SetBrushById(key);
   }
 });
+
+// --- Extension Methods
+
+// Add leading zero if number is one character
+Number.prototype.Lead = function () {
+  return this.toString().padStart(2, "0");
+};
+
+String.prototype.AddComma = function () {
+  return this + ",";
+};
