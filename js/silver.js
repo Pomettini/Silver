@@ -37,7 +37,7 @@ const BRUSH_TYPES = {
 const DOOR_TYPES = {
   NONE: {
     id: 0,
-    image: "doors/None.png"
+    image: ""
   },
   WALL: {
     id: 1,
@@ -93,6 +93,9 @@ $(function () {
   $(".cell").css("height", CELL_SIZE + "px");
 
   MapData.tiles = Array(W_CELLS * H_CELLS).fill(0);
+  MapData.doors = Array(4).fill(0);
+
+  $(".door").css("background-image", `url(img/${DOOR_TYPES.NONE.image})`);
 });
 
 function AddBrushes() {
@@ -193,8 +196,18 @@ Number.prototype.Lead = function () {
   return this.toString().padStart(2, "0");
 };
 
+String.prototype.AddComma = function () {
+  return this + ",";
+}
+
 function ExportMap() {
-  let csv = MapData.tiles.join(",");
+  // Brief description of the map format:
+  // 0-208 -> 
+  // 209-213 -> Door types in NESW format
+  var csv = "";
+  csv += MapData.tiles.join(",").AddComma();
+  csv += MapData.doors.join(",");
+
   let d = new Date();
   let date = `${d.getDay().Lead()}_${d.getMonth().Lead()}`;
   let time = `${d.getHours().Lead()}_${d.getMinutes().Lead()}_${d.getDay().Lead()}`;
@@ -237,8 +250,14 @@ function OnCellClicked(obj, id) {
   $(obj).css("background-color", CurrentBrush.type.color);
 }
 
-function OnDoorClicked(obj) {
-
+function OnDoorClicked(obj, id) {
+  // TODO: Refactor this ambomination
+  if (MapData.doors[id] < MapData.doors.length - 1) {
+    MapData.doors[id]++;
+  } else {
+    MapData.doors[id] = 0;
+  }
+  $(obj).css("background-image", `url(img/${DOOR_TYPES[Object.keys(DOOR_TYPES)[MapData.doors[id]]].image})`);
 }
 
 $(window).mousedown(function () {

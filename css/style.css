@@ -72,3 +72,9 @@ button {
     clear: both;
     margin: 10px;
 }
+
+.door {
+    /* background-image: url("../img/doors/None.png"); */
+    background-repeat: no-repeat;
+    background-size: contain;
+}
