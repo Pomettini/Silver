@@ -37,6 +37,10 @@ body {
     box-shadow: 0px 2px 5px black;
 }
 
+.cell:active {
+    transform: scale(1.0);
+}
+
 #brushes {
     position: absolute;
     left: 0;
@@ -58,6 +62,10 @@ body {
     box-shadow: 0px 2px 5px black;
 }
 
+#brushes li:active {
+    transform: scale(1.0);
+}
+
 #brushes li.selected {
     font-weight: bold;
     font-size: 150%;
@@ -77,4 +85,59 @@ button {
     /* background-image: url("../img/doors/None.png"); */
     background-repeat: no-repeat;
     background-size: contain;
+}
+
+#tutorial {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: none;
+}
+
+#tutorial div {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    color: white;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 200px;
+    text-shadow: 0px 2px 2px black;
+}
+
+#tutorial span {
+    font-size: 400%;
+    float: left;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+#tutorial p {
+    /* display: inline-block; */
+    line-height: 1.4em;
+}
+
+div#screen1 {
+    top: 50vh;
+    left: 170px;
+    transform: translate(0, -50%);
+}
+
+div#screen2 {
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+}
+
+div#screen3 {
+    top: 35vh;
+    left: calc(100vw - 20px);
+    transform: translate(-100%, -50%);
+}
+
+div#screen4 {
+    top: 20px;
+    left: 300px;
 }

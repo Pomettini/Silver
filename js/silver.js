@@ -4,6 +4,10 @@ const W_CELLS = 19;
 const H_CELLS = 11;
 const CELL_SIZE = 50;
 
+const half_size = CELL_SIZE / 2;
+const half_width = W_CELLS / 2;
+const half_height = H_CELLS / 2;
+
 const BRUSH_TYPES = {
   "None": {
     id: 0,
@@ -126,10 +130,10 @@ function SpawnCells() {
 }
 
 function SpawnDoors() {
-  SpawnDoor(0, CELL_SIZE * (W_CELLS / 2) - (CELL_SIZE / 2), -50);
-  SpawnDoor(1, CELL_SIZE * W_CELLS, CELL_SIZE * (H_CELLS / 2) - (CELL_SIZE / 2));
-  SpawnDoor(2, CELL_SIZE * (W_CELLS / 2) - (CELL_SIZE / 2), CELL_SIZE * H_CELLS);
-  SpawnDoor(3, -50, (H_CELLS / 2) * CELL_SIZE - (CELL_SIZE / 2));
+  SpawnDoor(0, (CELL_SIZE * half_width) - half_size, -CELL_SIZE);
+  SpawnDoor(1, (CELL_SIZE * W_CELLS), (CELL_SIZE * half_height) - half_size);
+  SpawnDoor(2, (CELL_SIZE * half_width) - half_size, (CELL_SIZE * H_CELLS));
+  SpawnDoor(3, -CELL_SIZE, (half_height * CELL_SIZE) - half_size);
 }
 
 function SpawnDoor(id, x, y) {
@@ -208,6 +212,10 @@ function DownloadFile(filename, text) {
   element.click();
 
   document.body.removeChild(element);
+}
+
+function ToggleTutorial() {
+  $("#tutorial").fadeToggle(200);
 }
 
 // --- Events ---

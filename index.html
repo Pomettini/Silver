@@ -16,6 +16,25 @@
     <ul id="brushes"></ul>
     <input type="file" accept=".csv" onchange="ImportMap(this)">
     <button type="button" onclick="ExportMap()">Save Level</button>
+    <button type="button" onclick="ToggleTutorial()">Show/Hide Tutorial</button>
+    <div id="tutorial" style="display: none">
+        <div id="screen1">
+            <span>1</span>
+            <p>Select brush by clicking on it on pressing 1-2-3-etc on your keyboard</p>
+        </div>
+        <div id="screen2">
+            <span>2</span>
+            <p>Click on a cell to paint with the brush you selected</p>
+        </div>
+        <div id="screen3">
+            <span>3</span>
+            <p>Click on the protruding boxes to change the door/wall type</p>
+        </div>
+        <div id="screen4">
+            <span>4</span>
+            <p>Save or load your map here</p>
+        </div>
+    </div>
 </body>
 
 </html>
