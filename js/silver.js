@@ -1,12 +1,12 @@
 // --- Constants ---
 
-const W_CELLS = 19;
-const H_CELLS = 11;
+const HOR_CELLS = 19;
+const VER_CELLS = 11;
 const CELL_SIZE = 50;
 
-const half_size = CELL_SIZE / 2;
-const half_width = W_CELLS / 2;
-const half_height = H_CELLS / 2;
+const HALF_SIZE = CELL_SIZE / 2;
+const HALF_WIDTH = HOR_CELLS / 2;
+const HALF_HEIGHT = VER_CELLS / 2;
 
 const BRUSH_TYPES = {
   "None": {
@@ -81,15 +81,15 @@ $(function () {
 
   SpawnDoors();
 
-  $("#grid").width(W_CELLS * CELL_SIZE);
-  $("#grid").height(H_CELLS * CELL_SIZE);
+  $("#grid").width(HOR_CELLS * CELL_SIZE);
+  $("#grid").height(VER_CELLS * CELL_SIZE);
 
   SpawnCells();
 
   $(".cell").css("width", CELL_SIZE + "px");
   $(".cell").css("height", CELL_SIZE + "px");
 
-  MapData.tiles = Array(W_CELLS * H_CELLS).fill(0);
+  MapData.tiles = Array(HOR_CELLS * VER_CELLS).fill(0);
   MapData.doors = Array(4).fill(0);
 
   $(".door").css("background-image", `url(img/${DOOR_TYPES.NONE.image})`);
@@ -112,9 +112,9 @@ function AddBrushes() {
 }
 
 function SpawnCells() {
-  for (x = 0; x < W_CELLS; x++) {
-    for (y = 0; y < H_CELLS; y++) {
-      let id = (y * W_CELLS) + x;
+  for (var x = 0; x < HOR_CELLS; x++) {
+    for (var y = 0; y < VER_CELLS; y++) {
+      let id = (y * HOR_CELLS) + x;
       var cell = $("<div>", {
         "class": "cell",
         "onMouseDown": `OnCellClicked(this, ${id})`,
@@ -130,10 +130,10 @@ function SpawnCells() {
 }
 
 function SpawnDoors() {
-  SpawnDoor(0, (CELL_SIZE * half_width) - half_size, -CELL_SIZE);
-  SpawnDoor(1, (CELL_SIZE * W_CELLS), (CELL_SIZE * half_height) - half_size);
-  SpawnDoor(2, (CELL_SIZE * half_width) - half_size, (CELL_SIZE * H_CELLS));
-  SpawnDoor(3, -CELL_SIZE, (half_height * CELL_SIZE) - half_size);
+  SpawnDoor(0, (CELL_SIZE * HALF_WIDTH) - HALF_SIZE, -CELL_SIZE);
+  SpawnDoor(1, (CELL_SIZE * HOR_CELLS), (CELL_SIZE * HALF_HEIGHT) - HALF_SIZE);
+  SpawnDoor(2, (CELL_SIZE * HALF_WIDTH) - HALF_SIZE, (CELL_SIZE * VER_CELLS));
+  SpawnDoor(3, -CELL_SIZE, (HALF_HEIGHT * CELL_SIZE) - HALF_SIZE);
 }
 
 function SpawnDoor(id, x, y) {
