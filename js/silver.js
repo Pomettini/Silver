@@ -78,18 +78,18 @@ $(function () {
 
   LoadDataFromStorage();
 
-  AddBrushes();
+  Brush.Setup();
   SetBrush({
     name: "None",
     type: BRUSH_TYPES.None
   });
 
-  SpawnCells();
+  Cell.Setup();
 
   $(".cell").css("width", CELL_SIZE + "px");
   $(".cell").css("height", CELL_SIZE + "px");
 
-  SpawnDoors();
+  Door.Setup();
 
   $("#grid").width(HOR_CELLS * CELL_SIZE);
   $("#grid").height(VER_CELLS * CELL_SIZE);
@@ -100,41 +100,6 @@ $(function () {
   SetDoorImagesBasedOnMapData();
 });
 
-function AddBrushes() {
-  for (var key in BRUSH_TYPES) {
-    var brush = $("<li>", {
-      "text": key,
-      "id": key.toLowerCase() + "_brush",
-      "class": "brush",
-      "onMouseDown": "OnBrushClicked(this)",
-      css: {
-        color: BRUSH_TYPES[key].textcolor,
-        backgroundColor: BRUSH_TYPES[key].color
-      }
-    });
-    $("#brushes").append(brush);
-  }
-}
-
-function SpawnCells() {
-  for (var x = 0; x < HOR_CELLS; x++) {
-    for (var y = 0; y < VER_CELLS; y++) {
-      let id = (y * HOR_CELLS) + x;
-      var cell = $("<div>", {
-        "id": `cell${id}`,
-        "class": "cell",
-        "onMouseDown": `OnCellClicked(this, ${id})`,
-        "onMouseEnter": `OnCellClickWhileDragging(this, ${id})`,
-        css: {
-          left: (CELL_SIZE * x) + "px",
-          top: (CELL_SIZE * y) + "px"
-        }
-      });
-      $("#grid").append(cell);
-    }
-  }
-}
-
 function SetCellColorBasedOnMapData() {
   for (var i = 0; i < HOR_CELLS * VER_CELLS; i++) {
     let cell = $(`#cell${i}`);
@@ -142,68 +107,21 @@ function SetCellColorBasedOnMapData() {
     if (cell == null)
       continue;
 
-    let color = GetBrushById(MapData.tiles[i]).type.color;
+    let color = Brush.GetById(MapData.tiles[i]).type.color;
     ChangeCellColor(cell, color);
   }
 }
 
-function SpawnDoors() {
-  let HORIZONTAL_DOOR_SIZE = {
-    width: CELL_SIZE * 4,
-    height: CELL_SIZE
-  };
-  let VERTICAL_DOOR_SIZE = {
-    width: CELL_SIZE,
-    height: CELL_SIZE * 3
-  };
-
-  SpawnDoor(0,
-    (CELL_SIZE * HALF_WIDTH) - (HORIZONTAL_DOOR_SIZE.width / 2),
-    -HORIZONTAL_DOOR_SIZE.height,
-    HORIZONTAL_DOOR_SIZE);
-  SpawnDoor(1,
-    (CELL_SIZE * HOR_CELLS),
-    (CELL_SIZE * HALF_HEIGHT) - (VERTICAL_DOOR_SIZE.height / 2),
-    VERTICAL_DOOR_SIZE);
-  SpawnDoor(2,
-    (CELL_SIZE * HALF_WIDTH) - (HORIZONTAL_DOOR_SIZE.width / 2),
-    (CELL_SIZE * VER_CELLS),
-    HORIZONTAL_DOOR_SIZE);
-  SpawnDoor(3,
-    -CELL_SIZE,
-    (HALF_HEIGHT * CELL_SIZE) - (VERTICAL_DOOR_SIZE.height / 2),
-    VERTICAL_DOOR_SIZE);
-}
-
-function SpawnDoor(id, x, y, size) {
-  var cell = $("<div>", {
-    "id": `door${id}`,
-    "class": "cell door",
-    "onMouseDown": `OnDoorClicked(this, ${id})`,
-    css: {
-      left: x,
-      top: y,
-      width: size.width,
-      height: size.height
-    }
-  });
-  $("#grid").append(cell);
-}
-
 function SetBrush(brush) {
-  GetBrushElement(CurrentBrush.name).removeClass("selected");
+  Brush.GetByName(CurrentBrush.name).removeClass("selected");
   CurrentBrush = brush;
-  GetBrushElement(CurrentBrush.name).addClass("selected");
-}
-
-function GetBrushElement(name) {
-  return $("#" + name.toLowerCase() + "_brush");
+  Brush.GetByName(CurrentBrush.name).addClass("selected");
 }
 
 function SetBrushById(id) {
   // TODO: Refactor this crap
-  if (GetBrushById(id).name != null) {
-    SetBrush(GetBrushById(id));
+  if (Brush.GetById(id).name != null) {
+    SetBrush(Brush.GetById(id));
   }
 }
 
@@ -221,25 +139,6 @@ function ReadTextFile(obj) {
   };
 
   reader.readAsText(obj.files[0]);
-}
-
-function ImportMap(file) {
-  ReadTextFile(file);
-}
-
-function ExportMap() {
-  // Brief description of the map format:
-  // 0-219 -> 
-  // 219-223 -> Door types in NESW format
-  var csv = "";
-  csv += MapData.tiles.join(",").AddComma();
-  csv += MapData.doors.join(",");
-
-  let d = new Date();
-  let date = `${d.getDay().Lead()}_${d.getMonth().Lead()}`;
-  let time = `${d.getHours().Lead()}_${d.getMinutes().Lead()}_${d.getDay().Lead()}`;
-  let suffix = `${date}__${time}`;
-  DownloadFile(`mylevel__${suffix}.csv`, csv);
 }
 
 function DownloadFile(filename, text) {
@@ -316,13 +215,6 @@ function SetDoorImagesBasedOnMapData() {
     let image = GetDoorImageById(i);
     ChangeDoorBgImage(cell, image);
   }
-}
-
-function GetBrushById(id) {
-  return {
-    name: Object.keys(BRUSH_TYPES)[id],
-    type: BRUSH_TYPES[Object.keys(BRUSH_TYPES)[id]]
-  };
 }
 
 $(window).mousedown(function () {

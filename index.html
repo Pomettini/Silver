@@ -7,15 +7,19 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/jquery-3.4.1.min.js"></script>
-    <script src="js/silver.js"></script>
     <script src="js/papaparse.min.js"></script>
+    <script src="js/brush.js"></script>
+    <script src="js/cell.js"></script>
+    <script src="js/door.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/silver.js"></script>
 </head>
 
 <body>
     <div id="grid"></div>
     <ul id="brushes"></ul>
-    <input type="file" accept=".csv" onchange="ImportMap(this)">
-    <button type="button" onclick="ExportMap()">Save Level</button>
+    <input type="file" accept=".csv" onchange="Map.Import(this)">
+    <button type="button" onclick="Map.Export()">Save Level</button>
     <button type="button" onclick="ToggleTutorial()">Show/Hide Tutorial</button>
     <button type="button" onclick="ClearMap()">Clear Map</button>
     <div id="tutorial" style="display: none">
