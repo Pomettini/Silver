@@ -4,64 +4,11 @@ const HOR_CELLS = 20;
 const VER_CELLS = 11;
 const CELL_SIZE = 50;
 
-const HALF_SIZE = CELL_SIZE / 2;
 const HALF_WIDTH = HOR_CELLS / 2;
 const HALF_HEIGHT = VER_CELLS / 2;
 
-const BRUSH_TYPES = {
-  "None": {
-    id: 0,
-    color: "white",
-    textcolor: "black"
-  },
-  "Void": {
-    id: 1,
-    color: "darkslategray",
-    textcolor: "white"
-  },
-  "Ground": {
-    id: 2,
-    color: "peru",
-    textcolor: "black"
-  },
-  "Chest": {
-    id: 3,
-    color: "yellow",
-    textcolor: "black"
-  }
-};
-
-const DOOR_TYPES = {
-  NONE: {
-    id: 0,
-    image: ""
-  },
-  WALL: {
-    id: 1,
-    image: "doors/Wall.png"
-  },
-  NORMAL_DOOR: {
-    id: 2,
-    image: "doors/NormalDoor.png"
-  },
-  LOCKED_DOOR: {
-    id: 3,
-    image: "doors/LockedDoor.png"
-  },
-};
-
-// --- Variables ---
-
-// var Brush = {
-//   name,
-//   type
-// }
-
-var CurrentBrush = {
-  name: "None",
-  type: BRUSH_TYPES.None
-};
 var IsMouseDown = false;
+
 var MapData = {
   tiles: [],
   // North, East, South, West
@@ -79,7 +26,7 @@ $(function () {
   LoadDataFromStorage();
 
   Brush.Setup();
-  SetBrush({
+  Brush.Set({
     name: "None",
     type: BRUSH_TYPES.None
   });
@@ -96,34 +43,9 @@ $(function () {
 
   $(".door").css("background-image", `url(img/${DOOR_TYPES.NONE.image})`);
 
-  SetCellColorBasedOnMapData();
-  SetDoorImagesBasedOnMapData();
+  Cell.SetColorBasedOnMapData();
+  Door.SetImagesBasedOnMapData();
 });
-
-function SetCellColorBasedOnMapData() {
-  for (var i = 0; i < HOR_CELLS * VER_CELLS; i++) {
-    let cell = $(`#cell${i}`);
-
-    if (cell == null)
-      continue;
-
-    let color = Brush.GetById(MapData.tiles[i]).type.color;
-    ChangeCellColor(cell, color);
-  }
-}
-
-function SetBrush(brush) {
-  Brush.GetByName(CurrentBrush.name).removeClass("selected");
-  CurrentBrush = brush;
-  Brush.GetByName(CurrentBrush.name).addClass("selected");
-}
-
-function SetBrushById(id) {
-  // TODO: Refactor this crap
-  if (Brush.GetById(id).name != null) {
-    SetBrush(Brush.GetById(id));
-  }
-}
 
 function ReadTextFile(obj) {
   if (obj.files.length === 0) {
@@ -161,62 +83,6 @@ function ToggleTutorial() {
 
 // --- Events ---
 
-function OnBrushClicked(obj) {
-  let brushName = $(obj).text();
-  SetBrush({
-    name: brushName,
-    type: BRUSH_TYPES[brushName]
-  });
-}
-
-function OnCellClickWhileDragging(obj, id) {
-  if (IsMouseDown === true) {
-    OnCellClicked(obj, id);
-  }
-}
-
-function OnCellClicked(obj, id) {
-  MapData.tiles[id] = CurrentBrush.type.id;
-  ChangeCellColor(obj, CurrentBrush.type.color);
-  SaveDataToStorage();
-}
-
-function ChangeCellColor(obj, color) {
-  $(obj).css("background-color", color);
-}
-
-function OnDoorClicked(obj, id) {
-  // TODO: Refactor this ambomination
-  if (MapData.doors[id] < MapData.doors.length - 1) {
-    MapData.doors[id]++;
-  } else {
-    MapData.doors[id] = 0;
-  }
-
-  ChangeDoorBgImage(obj, GetDoorImageById(id));
-  SaveDataToStorage();
-}
-
-function ChangeDoorBgImage(obj, image) {
-  $(obj).css("background-image", `url(img/${image})`);
-}
-
-function GetDoorImageById(id) {
-  return DOOR_TYPES[Object.keys(DOOR_TYPES)[MapData.doors[id]]].image;
-}
-
-function SetDoorImagesBasedOnMapData() {
-  for (var i = 0; i < 4; i++) {
-    let cell = $(`#door${i}`);
-
-    if (cell == null)
-      continue;
-
-    let image = GetDoorImageById(i);
-    ChangeDoorBgImage(cell, image);
-  }
-}
-
 $(window).mousedown(function () {
   IsMouseDown = true;
 });
@@ -226,9 +92,10 @@ $(window).mouseup(function () {
 });
 
 $(document).keypress(function (e) {
+  // Basically checks if it's a number key
   let key = e.which - 49;
   if (key >= 0 && key <= 9) {
-    SetBrushById(key);
+    Brush.SetById(key);
   }
 });
 
@@ -253,10 +120,6 @@ function SaveDataToStorage() {
     return;
 
   localStorage.setItem("MapData", mapdata_string);
-}
-
-function ClearMap() {
-  console.log("Not implemented yet");
 }
 
 // --- Extension Methods

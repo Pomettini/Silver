@@ -1,5 +1,24 @@
 var Door = {};
 
+const DOOR_TYPES = {
+    NONE: {
+        id: 0,
+        image: ""
+    },
+    WALL: {
+        id: 1,
+        image: "doors/Wall.png"
+    },
+    NORMAL_DOOR: {
+        id: 2,
+        image: "doors/NormalDoor.png"
+    },
+    LOCKED_DOOR: {
+        id: 3,
+        image: "doors/LockedDoor.png"
+    },
+};
+
 Door.Setup = function () {
     let HORIZONTAL_DOOR_SIZE = {
         width: CELL_SIZE * 4,
@@ -32,7 +51,7 @@ Door.Spawn = function (id, x, y, size) {
     var cell = $("<div>", {
         "id": `door${id}`,
         "class": "cell door",
-        "onMouseDown": `OnDoorClicked(this, ${id})`,
+        "onMouseDown": `Door.OnClicked(this, ${id})`,
         css: {
             left: x,
             top: y,
@@ -41,4 +60,36 @@ Door.Spawn = function (id, x, y, size) {
         }
     });
     $("#grid").append(cell);
+};
+
+Door.GetImageById = function (id) {
+    return DOOR_TYPES[Object.keys(DOOR_TYPES)[MapData.doors[id]]].image;
+};
+
+Door.OnClicked = function (obj, id) {
+    // TODO: Refactor this ambomination
+    if (MapData.doors[id] < MapData.doors.length - 1) {
+        MapData.doors[id]++;
+    } else {
+        MapData.doors[id] = 0;
+    }
+
+    Door.ChangeBgImage(obj, Door.GetImageById(id));
+    SaveDataToStorage();
+};
+
+Door.ChangeBgImage = function (obj, image) {
+    $(obj).css("background-image", `url(img/${image})`);
+};
+
+Door.SetImagesBasedOnMapData = function () {
+    for (var i = 0; i < 4; i++) {
+        let cell = $(`#door${i}`);
+
+        if (cell == null)
+            continue;
+
+        let image = Door.GetImageById(i);
+        Door.ChangeBgImage(cell, image);
+    }
 };

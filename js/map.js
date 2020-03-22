@@ -18,3 +18,7 @@ Map.Export = function () {
     let suffix = `${date}__${time}`;
     DownloadFile(`mylevel__${suffix}.csv`, csv);
 };
+
+Map.Clear = function () {
+    console.log("Not implemented yet");
+};
