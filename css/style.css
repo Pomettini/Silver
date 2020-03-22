@@ -85,6 +85,8 @@ button {
     /* background-image: url("../img/doors/None.png"); */
     background-repeat: no-repeat;
     background-size: contain;
+    background-position-x: center;
+    background-position-y: center;
 }
 
 #tutorial {

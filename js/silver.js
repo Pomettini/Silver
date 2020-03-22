@@ -1,6 +1,6 @@
 // --- Constants ---
 
-const HOR_CELLS = 19;
+const HOR_CELLS = 20;
 const VER_CELLS = 11;
 const CELL_SIZE = 50;
 
@@ -79,15 +79,15 @@ $(function () {
     type: BRUSH_TYPES.None
   });
 
-  SpawnDoors();
-
-  $("#grid").width(HOR_CELLS * CELL_SIZE);
-  $("#grid").height(VER_CELLS * CELL_SIZE);
-
   SpawnCells();
 
   $(".cell").css("width", CELL_SIZE + "px");
   $(".cell").css("height", CELL_SIZE + "px");
+
+  SpawnDoors();
+
+  $("#grid").width(HOR_CELLS * CELL_SIZE);
+  $("#grid").height(VER_CELLS * CELL_SIZE);
 
   MapData.tiles = Array(HOR_CELLS * VER_CELLS).fill(0);
   MapData.doors = Array(4).fill(0);
@@ -130,19 +130,42 @@ function SpawnCells() {
 }
 
 function SpawnDoors() {
-  SpawnDoor(0, (CELL_SIZE * HALF_WIDTH) - HALF_SIZE, -CELL_SIZE);
-  SpawnDoor(1, (CELL_SIZE * HOR_CELLS), (CELL_SIZE * HALF_HEIGHT) - HALF_SIZE);
-  SpawnDoor(2, (CELL_SIZE * HALF_WIDTH) - HALF_SIZE, (CELL_SIZE * VER_CELLS));
-  SpawnDoor(3, -CELL_SIZE, (HALF_HEIGHT * CELL_SIZE) - HALF_SIZE);
+  let HORIZONTAL_DOOR_SIZE = {
+    width: CELL_SIZE * 4,
+    height: CELL_SIZE
+  };
+  let VERTICAL_DOOR_SIZE = {
+    width: CELL_SIZE,
+    height: CELL_SIZE * 3
+  };
+
+  SpawnDoor(0,
+    (CELL_SIZE * HALF_WIDTH) - (HORIZONTAL_DOOR_SIZE.width / 2),
+    -HORIZONTAL_DOOR_SIZE.height,
+    HORIZONTAL_DOOR_SIZE);
+  SpawnDoor(1,
+    (CELL_SIZE * HOR_CELLS),
+    (CELL_SIZE * HALF_HEIGHT) - (VERTICAL_DOOR_SIZE.height / 2),
+    VERTICAL_DOOR_SIZE);
+  SpawnDoor(2,
+    (CELL_SIZE * HALF_WIDTH) - (HORIZONTAL_DOOR_SIZE.width / 2),
+    (CELL_SIZE * VER_CELLS),
+    HORIZONTAL_DOOR_SIZE);
+  SpawnDoor(3,
+    -CELL_SIZE,
+    (HALF_HEIGHT * CELL_SIZE) - (VERTICAL_DOOR_SIZE.height / 2),
+    VERTICAL_DOOR_SIZE);
 }
 
-function SpawnDoor(id, x, y) {
+function SpawnDoor(id, x, y, size) {
   var cell = $("<div>", {
     "class": "cell door",
     "onMouseDown": `OnDoorClicked(this, ${id})`,
     css: {
       left: x,
-      top: y
+      top: y,
+      width: size.width,
+      height: size.height
     }
   });
   $("#grid").append(cell);
@@ -187,8 +210,8 @@ function ImportMap(file) {
 
 function ExportMap() {
   // Brief description of the map format:
-  // 0-208 -> 
-  // 209-213 -> Door types in NESW format
+  // 0-219 -> 
+  // 219-223 -> Door types in NESW format
   var csv = "";
   csv += MapData.tiles.join(",").AddComma();
   csv += MapData.doors.join(",");
