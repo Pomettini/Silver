@@ -1,5 +1,12 @@
 var Map = {};
 
+Map.WarningCounter = 0;
+
+Map.Setup = function () {
+    MapData.tiles = Array(HOR_CELLS * VER_CELLS).fill(0);
+    MapData.doors = Array(4).fill(0);
+};
+
 Map.Import = function (file) {
     ReadTextFile(file);
 };
@@ -20,5 +27,31 @@ Map.Export = function () {
 };
 
 Map.Clear = function () {
-    console.log("Not implemented yet");
+    $("#undobutton").show();
+
+    switch (Map.WarningCounter) {
+        case 0:
+            $("#clearbutton").text("ARE YOU SURE?");
+            break;
+        case 1:
+            $("#clearbutton").text("ABSOLUTELY SURE?");
+            break;
+        case 2:
+            Map.Setup();
+            SaveDataToStorage();
+
+            Cell.SetColorBasedOnMapData();
+            Door.SetImagesBasedOnMapData();
+
+            Map.UndoClear();
+            return;
+    }
+
+    Map.WarningCounter++;
+};
+
+Map.UndoClear = function () {
+    Map.WarningCounter = 0;
+    $("#clearbutton").text("Clear Map Again");
+    $("#undobutton").hide();
 };

@@ -20,8 +20,7 @@ var MapData = {
 $(function () {
   console.log("Ready!");
 
-  MapData.tiles = Array(HOR_CELLS * VER_CELLS).fill(0);
-  MapData.doors = Array(4).fill(0);
+  Map.Setup();
 
   LoadDataFromStorage();
 
