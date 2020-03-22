@@ -73,6 +73,11 @@ var MapData = {
 $(function () {
   console.log("Ready!");
 
+  MapData.tiles = Array(HOR_CELLS * VER_CELLS).fill(0);
+  MapData.doors = Array(4).fill(0);
+
+  LoadDataFromStorage();
+
   AddBrushes();
   SetBrush({
     name: "None",
@@ -89,10 +94,10 @@ $(function () {
   $("#grid").width(HOR_CELLS * CELL_SIZE);
   $("#grid").height(VER_CELLS * CELL_SIZE);
 
-  MapData.tiles = Array(HOR_CELLS * VER_CELLS).fill(0);
-  MapData.doors = Array(4).fill(0);
-
   $(".door").css("background-image", `url(img/${DOOR_TYPES.NONE.image})`);
+
+  SetCellColorBasedOnMapData();
+  SetDoorImagesBasedOnMapData();
 });
 
 function AddBrushes() {
@@ -116,6 +121,7 @@ function SpawnCells() {
     for (var y = 0; y < VER_CELLS; y++) {
       let id = (y * HOR_CELLS) + x;
       var cell = $("<div>", {
+        "id": `cell${id}`,
         "class": "cell",
         "onMouseDown": `OnCellClicked(this, ${id})`,
         "onMouseEnter": `OnCellClickWhileDragging(this, ${id})`,
@@ -126,6 +132,18 @@ function SpawnCells() {
       });
       $("#grid").append(cell);
     }
+  }
+}
+
+function SetCellColorBasedOnMapData() {
+  for (var i = 0; i < HOR_CELLS * VER_CELLS; i++) {
+    let cell = $(`#cell${i}`);
+
+    if (cell == null)
+      continue;
+
+    let color = GetBrushById(MapData.tiles[i]).type.color;
+    ChangeCellColor(cell, color);
   }
 }
 
@@ -159,6 +177,7 @@ function SpawnDoors() {
 
 function SpawnDoor(id, x, y, size) {
   var cell = $("<div>", {
+    "id": `door${id}`,
     "class": "cell door",
     "onMouseDown": `OnDoorClicked(this, ${id})`,
     css: {
@@ -259,7 +278,12 @@ function OnCellClickWhileDragging(obj, id) {
 
 function OnCellClicked(obj, id) {
   MapData.tiles[id] = CurrentBrush.type.id;
-  $(obj).css("background-color", CurrentBrush.type.color);
+  ChangeCellColor(obj, CurrentBrush.type.color);
+  SaveDataToStorage();
+}
+
+function ChangeCellColor(obj, color) {
+  $(obj).css("background-color", color);
 }
 
 function OnDoorClicked(obj, id) {
@@ -269,11 +293,29 @@ function OnDoorClicked(obj, id) {
   } else {
     MapData.doors[id] = 0;
   }
-  $(obj).css("background-image", `url(img/${GetDoorImageById(id)})`);
+
+  ChangeDoorBgImage(obj, GetDoorImageById(id));
+  SaveDataToStorage();
+}
+
+function ChangeDoorBgImage(obj, image) {
+  $(obj).css("background-image", `url(img/${image})`);
 }
 
 function GetDoorImageById(id) {
   return DOOR_TYPES[Object.keys(DOOR_TYPES)[MapData.doors[id]]].image;
+}
+
+function SetDoorImagesBasedOnMapData() {
+  for (var i = 0; i < 4; i++) {
+    let cell = $(`#door${i}`);
+
+    if (cell == null)
+      continue;
+
+    let image = GetDoorImageById(i);
+    ChangeDoorBgImage(cell, image);
+  }
 }
 
 function GetBrushById(id) {
@@ -297,6 +339,33 @@ $(document).keypress(function (e) {
     SetBrushById(key);
   }
 });
+
+function LoadDataFromStorage() {
+  let mapdata_ls = localStorage.getItem("MapData");
+
+  if (mapdata_ls == null)
+    return;
+
+  let parsed_mapdata = JSON.parse(mapdata_ls);
+
+  if (parsed_mapdata == null)
+    return;
+
+  MapData = parsed_mapdata;
+}
+
+function SaveDataToStorage() {
+  let mapdata_string = JSON.stringify(MapData);
+
+  if (mapdata_string == null)
+    return;
+
+  localStorage.setItem("MapData", mapdata_string);
+}
+
+function ClearMap() {
+  console.log("Not implemented yet");
+}
 
 // --- Extension Methods
 
