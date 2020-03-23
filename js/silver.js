@@ -2,7 +2,7 @@
 
 const HOR_CELLS = 20;
 const VER_CELLS = 11;
-const CELL_SIZE = 50;
+const CELL_SIZE = 6;
 
 const HALF_WIDTH = HOR_CELLS / 2;
 const HALF_HEIGHT = VER_CELLS / 2;
@@ -32,13 +32,13 @@ $(function () {
 
   Cell.Setup();
 
-  $(".cell").css("width", CELL_SIZE + "px");
-  $(".cell").css("height", CELL_SIZE + "px");
+  $(".cell").css("width", CELL_SIZE + "vh");
+  $(".cell").css("height", CELL_SIZE + "vh");
 
   Door.Setup();
 
-  $("#grid").width(HOR_CELLS * CELL_SIZE);
-  $("#grid").height(VER_CELLS * CELL_SIZE);
+  $("#grid").css("width", HOR_CELLS * CELL_SIZE + "vh");
+  $("#grid").css("height", VER_CELLS * CELL_SIZE + "vh");
 
   $(".door").css("background-image", `url(img/${DOOR_TYPES.NONE.image})`);
 

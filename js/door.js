@@ -53,10 +53,10 @@ Door.Spawn = function (id, x, y, size) {
         "class": "cell door",
         "onMouseDown": `Door.OnClicked(this, ${id})`,
         css: {
-            left: x,
-            top: y,
-            width: size.width,
-            height: size.height
+            left: x + "vh",
+            top: y + "vh",
+            width: size.width + "vh",
+            height: size.height + "vh"
         }
     });
     $("#grid").append(cell);

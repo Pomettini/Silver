@@ -10,8 +10,8 @@ Cell.Setup = function () {
                 "onMouseDown": `Cell.OnClicked(this, ${id})`,
                 "onMouseEnter": `Cell.OnClickedWhileDragging(this, ${id})`,
                 css: {
-                    left: (CELL_SIZE * x) + "px",
-                    top: (CELL_SIZE * y) + "px"
+                    left: CELL_SIZE * x + "vh",
+                    top: CELL_SIZE * y + "vh"
                 }
             });
             $("#grid").append(cell);
