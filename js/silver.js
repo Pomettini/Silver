@@ -101,13 +101,15 @@ $(document).keypress(function (e) {
 function LoadDataFromStorage() {
   let mapdata_ls = localStorage.getItem("MapData");
 
-  if (mapdata_ls == null)
+  if (mapdata_ls == null) {
     return;
+  }
 
   let parsed_mapdata = JSON.parse(mapdata_ls);
 
-  if (parsed_mapdata == null)
+  if (parsed_mapdata == null) {
     return;
+  }
 
   MapData = parsed_mapdata;
 }
@@ -115,8 +117,9 @@ function LoadDataFromStorage() {
 function SaveDataToStorage() {
   let mapdata_string = JSON.stringify(MapData);
 
-  if (mapdata_string == null)
+  if (mapdata_string == null) {
     return;
+  }
 
   localStorage.setItem("MapData", mapdata_string);
 }

@@ -35,8 +35,9 @@ Cell.SetColorBasedOnMapData = function () {
     for (var i = 0; i < HOR_CELLS * VER_CELLS; i++) {
         let cell = $(`#cell${i}`);
 
-        if (cell == null)
+        if (cell == null) {
             continue;
+        }
 
         let color = Brush.GetById(MapData.tiles[i]).type.color;
         Cell.ChangeColor(cell, color);

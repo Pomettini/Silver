@@ -86,8 +86,9 @@ Door.SetImagesBasedOnMapData = function () {
     for (var i = 0; i < 4; i++) {
         let cell = $(`#door${i}`);
 
-        if (cell == null)
+        if (cell == null) {
             continue;
+        }
 
         let image = Door.GetImageById(i);
         Door.ChangeBgImage(cell, image);

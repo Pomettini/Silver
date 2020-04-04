@@ -16,12 +16,17 @@
 
 <body>
     <div id="grid"></div>
+
     <ul id="brushes"></ul>
-    <input type="file" accept=".csv" onchange="Map.Import(this)">
+
+    <!-- Menus at the top left -->
+    <input type="file" accept=".json" onchange="Map.Import(this)">
     <button type="button" onclick="Map.Export()">Save Level</button>
     <button type="button" onclick="ToggleTutorial()">Show/Hide Tutorial</button>
     <button id="clearbutton" type="button" onclick="Map.Clear()">Clear Map</button>
     <button id="undobutton" type="button" onclick="Map.UndoClear()" style="display: none">NO WAIT</button>
+
+    <!-- Tutorial modals -->
     <div id="tutorial" style="display: none">
         <div id="screen1">
             <span>1</span>
