@@ -36,7 +36,7 @@ Map.Clear = function () {
             Map.Setup();
             SaveDataToStorage();
 
-            Cell.SetColorBasedOnMapData();
+            Cell.SetImagesBasedOnMapData();
             Door.SetImagesBasedOnMapData();
 
             Map.UndoClear();

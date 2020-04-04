@@ -3,23 +3,31 @@ var Brush = {};
 const BRUSH_TYPES = {
     "None": {
         id: 0,
-        color: "white",
-        textcolor: "black"
+        image: ""
+    },
+    "Nones": {
+        id: 1,
+        image: "tiles/tile_full_grass.png"
     },
     "Void": {
-        id: 1,
-        color: "darkslategray",
-        textcolor: "white"
+        id: 2,
+        image: "tiles/tile_full_grass2.png"
     },
     "Ground": {
-        id: 2,
-        color: "peru",
-        textcolor: "black"
+        id: 3,
+        image: "tiles/tile_full_mix.png"
     },
     "Chest": {
-        id: 3,
-        color: "yellow",
-        textcolor: "black"
+        id: 4,
+        image: "tiles/tile_full_plane_mix.png"
+    },
+    "Chests": {
+        id: 5,
+        image: "tiles/tile_full_plane.png"
+    },
+    "Chestss": {
+        id: 6,
+        image: "tiles/tile_full_stone.png"
     }
 };
 
@@ -36,8 +44,7 @@ Brush.Setup = function () {
             "class": "brush",
             "onMouseDown": "Brush.OnClicked(this)",
             css: {
-                color: BRUSH_TYPES[key].textcolor,
-                backgroundColor: BRUSH_TYPES[key].color
+                backgroundImage: `url("img/${BRUSH_TYPES[key].image}")`
             }
         });
         $("#brushes").append(brush);

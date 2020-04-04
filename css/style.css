@@ -29,6 +29,7 @@ body {
     outline: 1px solid black;
     position: absolute;
     z-index: 0;
+    background-size: contain;
 }
 
 .cell:hover {
@@ -53,25 +54,27 @@ body {
     outline: 1px solid black;
     padding: 15px;
     margin: 1px 0;
-    width: 100px;
+    width: 50px;
+    height: 50px;
+    color: transparent;
+    font-size: 0;
+    background-size: contain;
+    background-image: url("../img/tiles/tile_full_stone.png");
 }
 
 #brushes li:hover {
     transform: scale(1.2);
-    z-index: 1;
+    z-index: 2;
     box-shadow: 0px 2px 5px black;
 }
 
 #brushes li:active {
-    transform: scale(1.0);
+    transform: scale(0.9);
 }
 
 #brushes li.selected {
-    font-weight: bold;
-    font-size: 150%;
-    width: 110px;
-    z-index: 2;
-    padding: 20px;
+    z-index: 1;
+    transform: scale(1.4);
 }
 
 input,

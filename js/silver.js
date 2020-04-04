@@ -42,7 +42,7 @@ $(function () {
 
   $(".door").css("background-image", `url(img/${DOOR_TYPES.NONE.image})`);
 
-  Cell.SetColorBasedOnMapData();
+  Cell.SetImagesBasedOnMapData();
   Door.SetImagesBasedOnMapData();
 });
 

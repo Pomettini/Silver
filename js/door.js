@@ -7,15 +7,15 @@ const DOOR_TYPES = {
     },
     WALL: {
         id: 1,
-        image: "doors/Wall.png"
+        image: "doors/wall.png"
     },
     NORMAL_DOOR: {
         id: 2,
-        image: "doors/NormalDoor.png"
+        image: "doors/normal_door.png"
     },
     LOCKED_DOOR: {
         id: 3,
-        image: "doors/LockedDoor.png"
+        image: "doors/locked_door.png"
     },
 };
 

@@ -21,7 +21,7 @@ Cell.Setup = function () {
 
 Cell.OnClicked = function (obj, id) {
     MapData.tiles[id] = CurrentBrush.type.id;
-    Cell.ChangeColor(obj, CurrentBrush.type.color);
+    Cell.ChangeBgImage(obj, CurrentBrush.type.image);
     SaveDataToStorage();
 };
 
@@ -31,7 +31,7 @@ Cell.OnClickedWhileDragging = function (obj, id) {
     }
 };
 
-Cell.SetColorBasedOnMapData = function () {
+Cell.SetImagesBasedOnMapData = function () {
     for (var i = 0; i < HOR_CELLS * VER_CELLS; i++) {
         let cell = $(`#cell${i}`);
 
@@ -39,11 +39,11 @@ Cell.SetColorBasedOnMapData = function () {
             continue;
         }
 
-        let color = Brush.GetById(MapData.tiles[i]).type.color;
-        Cell.ChangeColor(cell, color);
+        let image = Brush.GetById(MapData.tiles[i]).type.image;
+        Cell.ChangeBgImage(cell, image);
     }
 };
 
-Cell.ChangeColor = function (obj, color) {
-    $(obj).css("background-color", color);
+Cell.ChangeBgImage = function (obj, image) {
+    $(obj).css("background-image", `url(img/${image})`);
 };
